@@ -31,12 +31,22 @@ class Session():
     password = "msf"
     port = "55553"
     host = "127.0.0.1"
-    ssl = False
+    ssl = True
 
     # Variables
     msfconsole = None
 
-    def __init__(self, username=username, password=password, port=port, host=host, ssl=ssl, resource=None, exit=False):
+    def __init__(self, username=username, password=password, port=port, host=host, ssl=ssl, resource=None, exit_after_rc=False):
+        
+        self.username=username
+        self.password=password
+        self.port=port
+        self.host=host
+        self.ssl=ssl
+        self.resource=resource
+        self.exit=exit_after_rc
+        
+        
         if __name__ == '__main__':
             self.get_options()
         self.connect_msfconsole()
@@ -69,7 +79,8 @@ class Session():
 
         # Connect to msfrpcd
         if self.msfconsole.connect() is False:
-            sys.exit()
+            #sys.exit()
+            return
 
         # If -r flag is given
         if self.resource is not None:
@@ -78,7 +89,8 @@ class Session():
 
             if self.exit is True:
                 self.msfconsole.disconnect()
-                sys.exit()
+                #sys.exit()
+                return
 
         # Add directory auto completion
         readline.parse_and_bind("tab: complete")
