@@ -1,3 +1,29 @@
+# Not mantained
+This tool won't be mantained by me anymore. There are better alternatives from Rapid7 themselves as descrived here:
+[How to run metasploit remotley](https://metasploit.help.rapid7.com/docs/running-metasploit-remotely#section-running-metasploit-as-a-daemon)
+
+Example:
+
+To make msf commands viable from elsewhere then the metasploit-framework directory set the GEM_HOME variable.
+To find the necessary path cd into the metasploit-framework directory and execute:
+```
+$ rvm gemdir
+/usr/local/rvm/gems/ruby-2.5.1@metasploit-framework
+$ rvm use 2.5.1@metasploit-framework
+```
+
+
+To start Metasploit as a daemon, you need to run the msfd utility, which opens on port 55554 by default.
+```
+$ ./msfd -a 127.0.0.1
+```
+
+To connect to the daemon, use netcat like the following example:
+```
+$ nc 127.0.0.1 5554
+```
+
+
 # Description
 A remote msfconsole written in Python 2.7 to connect to the msfrcpd server of metasploit.
 This tool gives you the ability to load modules permanently as daemon on your server like autopwn2.
@@ -76,8 +102,15 @@ python Main.py --ssl --port 55553 --host 127.0.0.1 --user msf --pass msf
 
 
 # How do I install it ?
-First you must have metasploit installed. If you can't use the installer because you have no graphical environment or whatever use this guide from rapid7: [Setting Up a Metasploit Development Environment](https://github.com/rapid7/metasploit-framework/wiki/Setting-Up-a-Metasploit-Development-Environment).
+First you must have metasploit installed. If you can't use the installer because you have no graphical environment or whatever use this guide from rapid7: [Nightly installers](https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers).
 This will install all needed dependencies:
+```
+curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && \
+  chmod 755 msfinstall && \
+  ./msfinstall
+```
+
+
 ```
 git clone https://github.com/allfro/pymetasploit.git pymetasploit
 cd pymetasploit && sudo python setup.py install
