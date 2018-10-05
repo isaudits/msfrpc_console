@@ -1,12 +1,20 @@
 # Description
 A remote msfconsole written in Python 2.7 to connect to the msfrcpd server of metasploit.
 This tool gives you the ability to load modules permanently as daemon on your server like autopwn2.
-Although it gives you the ability to remotely use the msfrpcd server it is recommended to use it locally with a ssh or mosh shell because certificate validation is not enabled.
+Although it gives you the ability to remotely use the msfrpcd server you may consider using it locally with a ssh or mosh shell because certificate validation is not enabled.
+
+Note that remote msfconsole can also be obtained by just using the msfd daemon, however the daemon has limitations:
+ - It is unauthenticated; Doing it this way, we can still at least have basic authentication protecting our daemon without having to use SSH tunnel.
+ - Using the msf-rpc daemon we can launch the daemon as a service via script that also loads a resource file or processes a series of initialization commands to the daemon
+    - Hint hint...Maybe we have a social engineering server and we always want a generic meterpreter handler listening
+ - We can launch the client console with a resource file from the client workstation
+ - This tool can be imported as a module into other python applications to provide quick and easy interaction with a MSF-RPC server
 
 This is a modified port of the [msf-remote-console](https://github.com/Luis-Hebendanz/msf-remote-console) tool written by Luis Hebendanz:
 - Original source of [msf-remote-console](https://github.com/Luis-Hebendanz/msf-remote-console) included as a subtree
     - Essentially, we just re-wrote the main module to allow it to be imported as a module in other scripts
     - All the heavy lifting is done by the original, unmodified source
+    - The above project has been abandoned in favor of just using msfd (we still think it has valid uses as explained above)
 - Original source of the [pymetasploit](https://github.com/allfro/pymetasploit) dependency included as a subtree
     - no separate clone and install of pymetasploit required
 
