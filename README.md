@@ -83,11 +83,16 @@ With the -r option you specify a resource script to load from your computer into
 
 With the -e option, the console will exit automatically after running the resource script.
 
+Also don't forget to start your msfrpcd server first:
+```
+msfrpcd -U msf -P msf -p 55553
+```
+
 --------------------------------------------------------------------------------
 
 Copyright 2018
 
-Matthew C. Jones, CPA, CISA, OSCP
+Matthew C. Jones, CPA, CISA, OSCP, CCFE
 
 IS Audits & Consulting, LLC - <http://www.isaudits.com/>
 
