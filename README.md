@@ -1,33 +1,22 @@
-# Not mantained
-This tool won't be mantained by me anymore. There are better alternatives from Rapid7 themselves as descrived here:
-[How to run metasploit remotley](https://metasploit.help.rapid7.com/docs/running-metasploit-remotely#section-running-metasploit-as-a-daemon)
-
-Example:
-
-To make msf commands viable from elsewhere then the metasploit-framework directory set the GEM_HOME variable.
-To find the necessary path cd into the metasploit-framework directory and execute:
-```
-$ rvm gemdir
-/usr/local/rvm/gems/ruby-2.5.1@metasploit-framework
-$ rvm use 2.5.1@metasploit-framework
-```
-
-
-To start Metasploit as a daemon, you need to run the msfd utility, which opens on port 55554 by default.
-```
-$ ./msfd -a 127.0.0.1
-```
-
-To connect to the daemon, use netcat like the following example:
-```
-$ nc 127.0.0.1 5554
-```
-
-
 # Description
 A remote msfconsole written in Python 2.7 to connect to the msfrcpd server of metasploit.
 This tool gives you the ability to load modules permanently as daemon on your server like autopwn2.
-Although it gives you the ability to remotely use the msfrpcd server it is recommended to use it locally with a ssh or mosh shell because certificate validation is not enabled.
+Although it gives you the ability to remotely use the msfrpcd server you may consider using it locally with a ssh or mosh shell because certificate validation is not enabled.
+
+Note that remote msfconsole can also be obtained by just using the msfd daemon, however the daemon has limitations:
+ - It is unauthenticated; Doing it this way, we can still at least have basic authentication protecting our daemon without having to use SSH tunnel.
+ - Using the msf-rpc daemon we can launch the daemon as a service via script that also loads a resource file or processes a series of initialization commands to the daemon
+    - Hint hint...Maybe we have a social engineering server and we always want a generic meterpreter handler listening
+ - We can launch the client console with a resource file from the client workstation
+ - This tool can be imported as a module into other python applications to provide quick and easy interaction with a MSF-RPC server
+
+This is a modified port of the [msf-remote-console](https://github.com/Luis-Hebendanz/msf-remote-console) tool written by Luis Hebendanz:
+- Original source of [msf-remote-console](https://github.com/Luis-Hebendanz/msf-remote-console) included as a subtree
+    - Essentially, we just re-wrote the main module to allow it to be imported as a module in other scripts
+    - All the heavy lifting is done by the original, unmodified source
+    - The above project has been abandoned in favor of just using msfd (we still think it has valid uses as explained above)
+- Original source of the [pymetasploit](https://github.com/allfro/pymetasploit) dependency included as a subtree
+    - no separate clone and install of pymetasploit required
 
 ### Features
 - Optimized delivery & execution of commands.
@@ -36,7 +25,7 @@ Although it gives you the ability to remotely use the msfrpcd server it is recom
 - It feels like the normal msfconsole!
 
 
-# How does it looks like ?
+# Example output
 ```
 [*] Connecting to server:
  Host => myDomain.com,
@@ -67,8 +56,8 @@ Although it gives you the ability to remotely use the msfrpcd server it is recom
 msf > 
 ```
 
-# How do I use it ?
-Usage: Main.py [options]
+# Usage
+Usage: msfrpc-console.py [options]
 ```
 Options:
   -h, --help            show this help message and exit
@@ -81,58 +70,50 @@ Options:
   -s, --ssl             Enable ssl
   -P PORT, --port=PORT  Port to connect to
   -H HOST, --host=HOST  Server ip
-  -c, --credentials     Use hardcoded credentials
   -e, --exit            Exit after executing resource script
 ```
-With the -c option you can use the credentials hardcoded into Main.py feel free to change them so that you don't have to use the credential parameters all the time.
+If parameters are not specified, the following defaults are used:
+- username = "msf"
+- password = "msf"
+- port = 55553
+- host = "127.0.0.1"
+- ssl = False
 
 With the -r option you specify a resource script to load from your computer into the console.
 
+With the -e option, the console will exit automatically after running the resource script.
 
-
-### Example:
-This will load a resource script and use the hardcoded credentials:
+Also don't forget to start your msfrpcd server first:
 ```
-python Main.py -c -r /root/resource/handler/allHandlers.rc
-```
-This will log in to the msfrpcd server through command line arguments:
-```
-python Main.py --ssl --port 55553 --host 127.0.0.1 --user msf --pass msf
+msfrpcd -U msf -P msf -p 55553
 ```
 
+--------------------------------------------------------------------------------
 
-# How do I install it ?
-First you must have metasploit installed. If you can't use the installer because you have no graphical environment or whatever use this guide from rapid7: [Nightly installers](https://github.com/rapid7/metasploit-framework/wiki/Nightly-Installers).
-This will install all needed dependencies:
-```
-curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && \
-  chmod 755 msfinstall && \
-  ./msfinstall
-```
+Copyright 2018
 
+Matthew C. Jones, CPA, CISA, OSCP, CCFE
 
-```
-git clone https://github.com/allfro/pymetasploit.git pymetasploit
-cd pymetasploit && sudo python setup.py install
-```
+IS Audits & Consulting, LLC - <http://www.isaudits.com/>
 
-Also don't forget to start your msfrpcd server:
-```
-cd metasploit-framework/
-ruby msfrpcd -U msf -P msf -p 55553
-```
+TJS Deemer Dana LLP - <http://www.tjsdd.com/>
 
-And it's probably a good idea to start and connect to the postgresql database:
-By the way change the password in the echo line.
-```
-sudo update-rc.d postgresql enable
-sudo service postgresql start
-echo "create database msf;create user msf with password 'password';grant all privileges on database msf to msf;" > createdb_sql.txt
-sudo -u postgres /usr/bin/psql < /home/postgres/createdb_sql.txt
-```
-In Metasploit: 
-```
-db_connect msf:password@127.0.0.1/msf
-```
+Included submodules subject to their own copyright / licensing:
+- [msf-remote-console README](modules/msf-remote-console/README.md)
+- [pymetasploit README](modules/pymetasploit/README.md)
 
+--------------------------------------------------------------------------------
 
+Except as otherwise specified by included submodule licensing:
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <http://www.gnu.org/licenses/>.
