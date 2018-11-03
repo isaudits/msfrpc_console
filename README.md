@@ -15,7 +15,8 @@ This is a modified port of the [msf-remote-console](https://github.com/Luis-Hebe
     - Essentially, we just re-wrote the main module to allow it to be imported as a module in other scripts
     - All the heavy lifting is done by the original, unmodified source
     - The above project has been abandoned in favor of just using msfd (we still think it has valid uses as explained above)
-- Original source of the [pymetasploit](https://github.com/allfro/pymetasploit) dependency included as a subtree
+- Source of the [pymetasploit](https://github.com/Mikaayenson/pymetasploit) dependency included as a subtree
+    - Updated fork of original [pymetasploit](https://github.com/allfro/pymetasploit)
     - no separate clone and install of pymetasploit required
 
 ### Features
