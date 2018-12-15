@@ -19,6 +19,11 @@ This is a modified port of the [msf-remote-console](https://github.com/Luis-Hebe
     - Updated fork of original [pymetasploit](https://github.com/allfro/pymetasploit)
     - no separate clone and install of pymetasploit required
 
+### Install note
+While this application is written for python 2, the pymetasploit dependency has been updated to python3 syntax.
+If you get an error about importing http.client lib, make sure that the future module has been installed:
+```pip install future```
+
 ### Features
 - Optimized delivery & execution of commands.
 - Has all msf commands implemented even future ones. This is possible through the structure of the rpc api.
